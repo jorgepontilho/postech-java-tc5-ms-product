@@ -6,7 +6,7 @@ services:
     hostname: "mysql-product"
     environment:
       MYSQL_DATABASE: 'productdb'
-      MYSQL_USER: 'productuser'
+      MYSQL_USER: 'productuser_mysql'
       MYSQL_PASSWORD: 'mSq@2024*PtEc'
       MYSQL_ROOT_PASSWORD: 'mSqR@@t*2024p@s'
     ports:
