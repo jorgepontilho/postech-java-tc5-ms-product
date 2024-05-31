@@ -25,7 +25,7 @@ COPY --from=build /app/target/*.jar /app/msproduct.jar
 # Instalando wait-for-it.sh para poder esperar o banco de dados
 RUN apt-get update -y \
     && apt-get install -y wget netcat \
-    && wget -O /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+    && wget -O /usr/local/bin/wait-for-it.sh https://raw.githubproductcontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
     && chmod +x /usr/local/bin/wait-for-it.sh
 
 # Aguardando até que o banco inicie antes de iniciar a aplicação
