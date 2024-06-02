@@ -30,15 +30,8 @@ public class SecurityConfigurations {
                                     "/swagger-ui/**", "/swagger-resources/**",
                                     "/v3/api-docs", "/v3/api-docs/**", "/webjars/**", "")
                             .permitAll();
-
-                    authorizeConfig.requestMatchers(HttpMethod.POST, "/api/products/login")
-                            .permitAll();
-                    authorizeConfig.requestMatchers(HttpMethod.GET, "/api/products/token", "/api/products/token/**")
-                            .permitAll();
-
                     authorizeConfig.requestMatchers("/api/products", "/api/products/**")
                             .permitAll().anyRequest().authenticated();
-
                 }).build();
     }
 

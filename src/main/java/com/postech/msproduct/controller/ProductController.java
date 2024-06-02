@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    @Autowired
     private ProductGateway productGateway;
 
     public ProductController(ProductGateway productGateway) {
@@ -47,6 +46,7 @@ public class ProductController {
             @ApiResponse(description = "List of all products", responseCode = "200")
     })
     public ResponseEntity<?> listAllProducts() {
+        log.info("GetMapping - listAllProducts");
         return new ResponseEntity<>(productGateway.listAll(), HttpStatus.OK);
     }
 

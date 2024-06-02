@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Random;
-
 @Data
 @Entity
 @Table(name = "tb_Product")
@@ -27,18 +25,15 @@ public class Product {
     int quantity;
 
     public Product(ProductDTO ProductDTO) {
-        if (ProductDTO.getId() == 0) {
-            Random random = new Random();
-            this.id = random.nextInt();
-        } else {
-            this.id = ProductDTO.getId();
-        }
+        this.id = ProductDTO.getId();
         this.name = ProductDTO.getName();
+        this.description = ProductDTO.getDescription();
         this.urlImage = ProductDTO.getUrlImage();
         this.price = ProductDTO.getPrice();
         this.quantity = ProductDTO.getQuantity();
         setCategory(ProductDTO.getCategory());
     }
+
     public ProductDTO toDTO() {
         return new ProductDTO(
                 this.id,
@@ -50,6 +45,7 @@ public class Product {
                 this.quantity
         );
     }
+
     public void setCategory(String category) {
         for (ProductCategory productCategory : ProductCategory.values()) {
             if (category.equals(productCategory.toString())) {
