@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,11 @@ public class ProductController {
     @Operation(summary = "Create a new product with a DTO", responses = {
             @ApiResponse(description = "The new product was created", responseCode = "201")
     })
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<?> createProduct(HttpServletRequest request, @Valid @RequestBody ProductDTO productDTO) {
         log.info("PostMapping - createProduct for product [{}]", productDTO.getName());
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         try {
             ProductUseCase.validarProduto(productDTO);
             ProductDTO productCreated = productGateway.createProduct(productDTO);
@@ -83,7 +87,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-    
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a product by ID", responses = {
             @ApiResponse(description = "The product was deleted", responseCode = "204")

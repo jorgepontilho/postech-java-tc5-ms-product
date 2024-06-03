@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class MappingAuthorization {
+public class MethodAuthorized {
     String method;
     UserRole userRole;
 }

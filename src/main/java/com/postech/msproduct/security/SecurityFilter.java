@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.postech.msproduct.exceptions.NotFoundException;
 import com.postech.msproduct.gateway.ProductGateway;
 import com.postech.msproduct.security.enums.UserRole;
 import org.springframework.stereotype.Component;
@@ -21,31 +20,40 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        var token = this.recoverToken(request);
-        if (token == null) {
-            throw new NotFoundException("Usuário [token] inválido");
-        }
-        UserRole userRole = ProductGateway.getUserRoleFromToken(token);
-        if (userRole == null) {
-            throw new NotFoundException("Usuário [token] inválido");
-        }
-        if (!checkAuthorization(request.getMethod(), userRole)) {
-            throw new ServletException("checkAuthorization - Usuário [token] inválido");
-        }
+        ValidRequest(request);
         filterChain.doFilter(request, response);
     }
 
-    private boolean checkAuthorization(String method, UserRole userRole) {
-        List<MappingAuthorization> mappingAuthLst = new ArrayList<>();
-        mappingAuthLst.add(new MappingAuthorization("GET", UserRole.USER));
-        mappingAuthLst.add(new MappingAuthorization("GET", UserRole.ADMIN));
-        mappingAuthLst.add(new MappingAuthorization("POST", UserRole.ADMIN));
-        mappingAuthLst.add(new MappingAuthorization("PUT", UserRole.ADMIN));
-        mappingAuthLst.add(new MappingAuthorization("DELETE", UserRole.ADMIN));
+    private void ValidRequest(HttpServletRequest request) {
+        var token = this.recoverToken(request);
+        if (token == null) {
+            request.setAttribute("error", "Bearer token inválido");
+            return;
+        }
 
-        for (MappingAuthorization mappingAuth : mappingAuthLst) {
-            if (mappingAuth.getMethod().equals(method)
-                    && mappingAuth.getUserRole().equals(userRole)) {
+        UserRole userRole = ProductGateway.getUserRoleFromToken(token);
+        if (userRole == null) {
+            request.setAttribute("error", "Usuário [token] inválido");
+            return;
+        }
+
+        if (!checkAuthorization(request.getMethod(), userRole)) {
+            request.setAttribute("error", "Método [" + request.getMethod()
+                    + "] não autorizado ao perfil [" + userRole + "]");
+        }
+    }
+
+    private boolean checkAuthorization(String method, UserRole userRole) {
+        List<MethodAuthorized> methodAuthLst = new ArrayList<>();
+        methodAuthLst.add(new MethodAuthorized("GET", UserRole.USER));
+        methodAuthLst.add(new MethodAuthorized("GET", UserRole.ADMIN));
+        methodAuthLst.add(new MethodAuthorized("POST", UserRole.ADMIN));
+        methodAuthLst.add(new MethodAuthorized("PUT", UserRole.ADMIN));
+        methodAuthLst.add(new MethodAuthorized("DELETE", UserRole.ADMIN));
+
+        for (MethodAuthorized methodAuth : methodAuthLst) {
+            if (methodAuth.getMethod().equals(method)
+                    && methodAuth.getUserRole().equals(userRole)) {
                 return true;
             }
         }
