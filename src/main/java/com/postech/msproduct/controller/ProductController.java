@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,8 @@ public class ProductController {
     public ResponseEntity<?> createProduct(HttpServletRequest request, @Valid @RequestBody ProductDTO productDTO) {
         log.info("PostMapping - createProduct for product [{}]", productDTO.getName());
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         try {
             ProductUseCase.validarProduto(productDTO);
@@ -51,7 +53,8 @@ public class ProductController {
     public ResponseEntity<?> listAllProducts(HttpServletRequest request) {
         log.info("GetMapping - listAllProducts");
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         return new ResponseEntity<>(productGateway.listAll(), HttpStatus.OK);
     }
@@ -64,7 +67,8 @@ public class ProductController {
     public ResponseEntity<?> findProduct(HttpServletRequest request, @PathVariable Integer id) {
         log.info("GetMapping - FindProduct");
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         ProductDTO productDTO = productGateway.findById(id);
         if (productDTO != null) {
@@ -80,7 +84,8 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(HttpServletRequest request, @PathVariable Integer id, @RequestBody @Valid ProductDTO productDTO) {
         log.info("PutMapping - updateProduct");
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         try {
             ProductDTO productOld = productGateway.findById(id);
@@ -102,7 +107,8 @@ public class ProductController {
     })
     public ResponseEntity<?> deleteById(HttpServletRequest request, @PathVariable int id) {
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         ProductDTO produtcDTO = productGateway.findById(id);
         ProductUseCase.validarDeleteProduto(produtcDTO);
@@ -124,7 +130,8 @@ public class ProductController {
     })
     public ResponseEntity<?> updateStockIncrease(HttpServletRequest request, @Valid @PathVariable int id, @PathVariable int quantity) {
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         ProductDTO productDTO = productGateway.updateStockIncrease(id, quantity);
         return ResponseEntity.ok(productDTO);
@@ -136,7 +143,8 @@ public class ProductController {
     })
     public ResponseEntity<?> updateStockDecrease(HttpServletRequest request, @Valid @PathVariable int id, @PathVariable int quantity) {
         if (request.getAttribute("error") != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+            return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
+                    .body(request.getAttribute("error"));
         }
         ProductDTO productDTO = productGateway.updateStockDecrease(id, quantity);
         return ResponseEntity.ok(productDTO);

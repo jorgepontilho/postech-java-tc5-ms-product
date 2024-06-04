@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.postech.msproduct.gateway.ProductGateway;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -26,17 +27,20 @@ public class SecurityFilter extends OncePerRequestFilter {
     private void ValidRequest(HttpServletRequest request) {
         var token = this.recoverToken(request);
         if (token == null) {
+            request.setAttribute("error_code", HttpStatus.BAD_REQUEST);
             request.setAttribute("error", "Bearer token inválido");
             return;
         }
 
         SecurityUser securityUser = ProductGateway.getUserFromToken(token);
         if (securityUser == null) {
+            request.setAttribute("error_code", HttpStatus.BAD_REQUEST);
             request.setAttribute("error", "Bearer token inválido");
             return;
         }
 
         if (!checkAuthorization(request.getMethod(), securityUser.getRole())) {
+            request.setAttribute("error_code", HttpStatus.METHOD_NOT_ALLOWED);
             request.setAttribute("error", "Método [" + request.getMethod()
                     + "] não autorizado [" + securityUser + "]");
         }
