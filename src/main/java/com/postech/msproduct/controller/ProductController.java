@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,8 +48,11 @@ public class ProductController {
     @Operation(summary = "Get all products", responses = {
             @ApiResponse(description = "List of all products", responseCode = "200")
     })
-    public ResponseEntity<?> listAllProducts() {
+    public ResponseEntity<?> listAllProducts(HttpServletRequest request) {
         log.info("GetMapping - listAllProducts");
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         return new ResponseEntity<>(productGateway.listAll(), HttpStatus.OK);
     }
 
@@ -59,8 +61,11 @@ public class ProductController {
             @ApiResponse(description = "The product by ID", responseCode = "200", content = @Content(schema = @Schema(implementation = Product.class))),
             @ApiResponse(description = "Product Not Found", responseCode = "404", content = @Content(schema = @Schema(type = "string", example = "Produto não encontrado.")))
     })
-    public ResponseEntity<?> findProduct(@PathVariable Integer id) {
+    public ResponseEntity<?> findProduct(HttpServletRequest request, @PathVariable Integer id) {
         log.info("GetMapping - FindProduct");
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         ProductDTO productDTO = productGateway.findById(id);
         if (productDTO != null) {
             return new ResponseEntity<>(productDTO, HttpStatus.OK);
@@ -72,8 +77,11 @@ public class ProductController {
     @Operation(summary = "Request for update a product by ID", responses = {
             @ApiResponse(description = "The products was updated", responseCode = "200", content = @Content(schema = @Schema(implementation = Product.class)))
     })
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody @Valid ProductDTO productDTO) {
+    public ResponseEntity<?> updateProduct(HttpServletRequest request, @PathVariable Integer id, @RequestBody @Valid ProductDTO productDTO) {
         log.info("PutMapping - updateProduct");
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         try {
             ProductDTO productOld = productGateway.findById(id);
             ProductUseCase.validarProduto(productOld);
@@ -92,7 +100,10 @@ public class ProductController {
     @Operation(summary = "Delete a product by ID", responses = {
             @ApiResponse(description = "The product was deleted", responseCode = "204")
     })
-    public ResponseEntity<?> deleteById(@PathVariable int id) {
+    public ResponseEntity<?> deleteById(HttpServletRequest request, @PathVariable int id) {
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         ProductDTO produtcDTO = productGateway.findById(id);
         ProductUseCase.validarDeleteProduto(produtcDTO);
         productGateway.deleteProduct(id);
@@ -103,7 +114,7 @@ public class ProductController {
     @Operation(summary = "Get the availability of a product by id and the quantity wanted", responses = {
             @ApiResponse(description = "True if the qtty is found", responseCode = "200")
     })
-    public Boolean isProductAvailableById(@PathVariable int id, @PathVariable int qtty) {
+    public Boolean isProductAvailableById(HttpServletRequest request, @PathVariable int id, @PathVariable int qtty) {
         return productGateway.isProductAvailableById(id, qtty);
     }
 
@@ -111,7 +122,10 @@ public class ProductController {
     @Operation(summary = "Increase the stock for one product by ID", responses = {
             @ApiResponse(description = "The stock was updated", responseCode = "200")
     })
-    public ResponseEntity<?> updateStockIncrease(@Valid @PathVariable int id, @PathVariable int quantity) {
+    public ResponseEntity<?> updateStockIncrease(HttpServletRequest request, @Valid @PathVariable int id, @PathVariable int quantity) {
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         ProductDTO productDTO = productGateway.updateStockIncrease(id, quantity);
         return ResponseEntity.ok(productDTO);
     }
@@ -120,9 +134,11 @@ public class ProductController {
     @Operation(summary = "Decrease the stock for one product by ID", responses = {
             @ApiResponse(description = "The stock was updated", responseCode = "200")
     })
-    public ResponseEntity<?> updateStockDecrease(@Valid @PathVariable int id, @PathVariable int quantity) {
+    public ResponseEntity<?> updateStockDecrease(HttpServletRequest request, @Valid @PathVariable int id, @PathVariable int quantity) {
+        if (request.getAttribute("error") != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(request.getAttribute("error"));
+        }
         ProductDTO productDTO = productGateway.updateStockDecrease(id, quantity);
         return ResponseEntity.ok(productDTO);
     }
-
 }

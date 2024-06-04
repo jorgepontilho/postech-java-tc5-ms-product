@@ -1,6 +1,5 @@
 package com.postech.msproduct.security;
 
-import com.postech.msproduct.security.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class MethodAuthorized {
+public class SecurityMethodAuthorized {
     String method;
-    UserRole userRole;
+    String role;
 }

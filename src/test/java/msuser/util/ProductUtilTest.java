@@ -1,4 +1,4 @@
-package util;
+package msuser.util;
 
 import com.postech.msproduct.dto.ProductDTO;
 import com.postech.msproduct.entity.Product;

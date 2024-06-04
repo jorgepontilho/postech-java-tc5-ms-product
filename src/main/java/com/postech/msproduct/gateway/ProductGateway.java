@@ -5,17 +5,15 @@ import com.postech.msproduct.dto.ProductDTO;
 import com.postech.msproduct.entity.Product;
 import com.postech.msproduct.exceptions.NotFoundException;
 import com.postech.msproduct.repository.ProductRepository;
-import com.postech.msproduct.security.enums.UserRole;
+import com.postech.msproduct.security.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -103,29 +101,18 @@ public class ProductGateway {
         throw new NotFoundException("Produto não encontrado");
     }
 
-    public static UserRole getUserRoleFromToken(String token) {
-        String url = msUserUrl + "/" + token;
-        String role = FieldFromMap(url, "role");
-        if (role == null) {
-            return null;
-        } else {
-            for (UserRole userRole : UserRole.values()) {
-                if (role.equals(userRole.name())) {
-                    return userRole;
-                }
-            }
-            return null;
-        }
-    }
-
-    private static String FieldFromMap(String url, String field) {
+    public static SecurityUser getUserFromToken(String token) {
+        SecurityUser securityUser= new SecurityUser();
         try {
+            String url = msUserUrl + "/" + token;
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> map = mapper.readValue(response.getBody(), Map.class);
-            return map.get(field).toString();
+            securityUser.setLogin( map.get("login").toString());
+            securityUser.setRole( map.get("role").toString());
+            return securityUser;
         } catch (Exception e) {
-            return "";
+            return null;
         }
     }
 }

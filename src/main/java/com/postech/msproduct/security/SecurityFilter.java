@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.postech.msproduct.gateway.ProductGateway;
-import com.postech.msproduct.security.enums.UserRole;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,29 +30,29 @@ public class SecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        UserRole userRole = ProductGateway.getUserRoleFromToken(token);
-        if (userRole == null) {
-            request.setAttribute("error", "Usuário [token] inválido");
+        SecurityUser securityUser = ProductGateway.getUserFromToken(token);
+        if (securityUser == null) {
+            request.setAttribute("error", "Bearer token inválido");
             return;
         }
 
-        if (!checkAuthorization(request.getMethod(), userRole)) {
+        if (!checkAuthorization(request.getMethod(), securityUser.getRole())) {
             request.setAttribute("error", "Método [" + request.getMethod()
-                    + "] não autorizado ao perfil [" + userRole + "]");
+                    + "] não autorizado [" + securityUser + "]");
         }
     }
 
-    private boolean checkAuthorization(String method, UserRole userRole) {
-        List<MethodAuthorized> methodAuthLst = new ArrayList<>();
-        methodAuthLst.add(new MethodAuthorized("GET", UserRole.USER));
-        methodAuthLst.add(new MethodAuthorized("GET", UserRole.ADMIN));
-        methodAuthLst.add(new MethodAuthorized("POST", UserRole.ADMIN));
-        methodAuthLst.add(new MethodAuthorized("PUT", UserRole.ADMIN));
-        methodAuthLst.add(new MethodAuthorized("DELETE", UserRole.ADMIN));
+    private boolean checkAuthorization(String method, String securityEnumUserRole) {
+        List<SecurityMethodAuthorized> methodAuthLst = new ArrayList<>();
+        methodAuthLst.add(new SecurityMethodAuthorized("GET", "USER"));
+        methodAuthLst.add(new SecurityMethodAuthorized("GET", "ADMIN"));
+        methodAuthLst.add(new SecurityMethodAuthorized("POST", "ADMIN"));
+        methodAuthLst.add(new SecurityMethodAuthorized("PUT", "ADMIN"));
+        methodAuthLst.add(new SecurityMethodAuthorized("DELETE", "ADMIN"));
 
-        for (MethodAuthorized methodAuth : methodAuthLst) {
+        for (SecurityMethodAuthorized methodAuth : methodAuthLst) {
             if (methodAuth.getMethod().equals(method)
-                    && methodAuth.getUserRole().equals(userRole)) {
+                    && methodAuth.getRole().equals(securityEnumUserRole)) {
                 return true;
             }
         }
