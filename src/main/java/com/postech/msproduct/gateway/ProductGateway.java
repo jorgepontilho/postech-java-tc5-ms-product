@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -53,8 +54,8 @@ public class ProductGateway {
     }
 
     public ProductDTO findById(Integer id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Produto não encontrado")).toDTO();
+        Optional<Product> product = productRepository.findById(id);
+        return (product.map(Product::toDTO).orElse(null));
     }
 
     public List<ProductDTO> listAll() {
