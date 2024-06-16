@@ -2,6 +2,7 @@ package com.postech.msproduct.controller;
 
 import com.postech.msproduct.dto.ProductDTO;
 import com.postech.msproduct.entity.Product;
+import com.postech.msproduct.exceptions.NotFoundException;
 import com.postech.msproduct.gateway.ProductGateway;
 import com.postech.msproduct.usecase.ProductUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -120,8 +121,13 @@ public class ProductController {
     @Operation(summary = "Get the availability of a product by id and the quantity wanted", responses = {
             @ApiResponse(description = "True if the qtty is found", responseCode = "200")
     })
-    public Boolean isProductAvailableById(HttpServletRequest request, @PathVariable int id, @PathVariable int qtty) {
-        return productGateway.isProductAvailableById(id, qtty);
+    public ResponseEntity<?>  isProductAvailableById(HttpServletRequest request, @PathVariable int id, @PathVariable int qtty) {
+        try{
+            return ResponseEntity.ok(productGateway.isProductAvailableById(id, qtty));
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PutMapping("/updateStockIncrease/{id}/{quantity}")
