@@ -2,6 +2,7 @@ package com.postech.msproduct.usecase;
 
 import com.postech.msproduct.dto.ProductDTO;
 import com.postech.msproduct.entity.Product;
+import com.postech.msproduct.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class ProductUseCase {
 
     public static void validarDeleteProduto(ProductDTO productDTO) {
         if (productDTO == null) {
-            throw new IllegalArgumentException("Produto não encontrado.");
+            throw new NotFoundException("Produto não encontrado.");
         }
     }
 }

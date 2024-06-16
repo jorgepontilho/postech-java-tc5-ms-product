@@ -111,10 +111,15 @@ public class ProductController {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        ProductDTO produtcDTO = productGateway.findById(id);
-        ProductUseCase.validarDeleteProduto(produtcDTO);
-        productGateway.deleteProduct(id);
-        return new ResponseEntity<>("Produto removido.", HttpStatus.OK);
+        try {
+            ProductDTO produtcDTO = productGateway.findById(id);
+            ProductUseCase.validarDeleteProduto(produtcDTO);
+            productGateway.deleteProduct(id);
+            return new ResponseEntity<>("Produto removido.", HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/{qtty}")
