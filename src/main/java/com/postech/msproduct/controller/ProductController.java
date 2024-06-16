@@ -139,8 +139,13 @@ public class ProductController {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        ProductDTO productDTO = productGateway.updateStockIncrease(id, quantity);
-        return ResponseEntity.ok(productDTO);
+        try {
+            ProductDTO productDTO = productGateway.updateStockIncrease(id, quantity);
+            return ResponseEntity.ok(productDTO);
+        }
+        catch(NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PutMapping("/updateStockDecrease/{id}/{quantity}")
@@ -152,7 +157,12 @@ public class ProductController {
             return ResponseEntity.status((HttpStatusCode) request.getAttribute("error_code"))
                     .body(request.getAttribute("error"));
         }
-        ProductDTO productDTO = productGateway.updateStockDecrease(id, quantity);
-        return ResponseEntity.ok(productDTO);
+        try{
+            ProductDTO productDTO = productGateway.updateStockDecrease(id, quantity);
+            return ResponseEntity.ok(productDTO);
+        }
+        catch(NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
