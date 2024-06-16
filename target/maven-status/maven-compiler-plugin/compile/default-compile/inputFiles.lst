@@ -1,0 +1,14 @@
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\gateway\ProductGateway.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\dto\ProductDTO.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\usecase\ProductUseCase.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\controller\ProductController.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\security\SecurityMethodAuthorized.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\security\SecurityFilter.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\security\SecurityConfigurations.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\interfaces\IProductGateway.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\security\SecurityUser.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\MsProductsApplication.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\entity\enums\ProductCategory.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\exceptions\NotFoundException.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\repository\ProductRepository.java
+D:\Google Drive\Projetos\04_Pós_FIAP\Git\postech-java-ms-product\src\main\java\com\postech\msproduct\entity\Product.java
