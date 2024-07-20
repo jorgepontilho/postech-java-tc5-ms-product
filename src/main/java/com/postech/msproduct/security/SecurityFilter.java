@@ -20,11 +20,11 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        ValidRequest(request);
+        validateRequest(request);
         filterChain.doFilter(request, response);
     }
 
-    private void ValidRequest(HttpServletRequest request) {
+    private void validateRequest(HttpServletRequest request) {
         var token = this.recoverToken(request);
         if (token == null) {
             request.setAttribute("error_code", HttpStatus.BAD_REQUEST);
