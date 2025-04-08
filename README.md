@@ -58,3 +58,6 @@ http://localhost:8081/swagger-ui/index.html
 App: http://localhost:8081
 
 MySQL: jdbc:mysql://localhost:3307/productdb
+
+## Git
+https://github.com/jorgepontilho/postech-java-tc5-ms-product
